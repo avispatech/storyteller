@@ -2,9 +2,9 @@
 
 version 0.2.0
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/storyteller`. To experiment with that code, run `bin/console` for an interactive prompt.
+Run user stories based on a simple DSL
 
-TODO: Delete this and the text above, and describe your gem
+User stories or Use Cases can be written in a procedural way, like a recipe, to increase the understanding of the problem.
 
 ## Installation
 
@@ -18,7 +18,47 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ## Usage
 
-TODO: Write usage instructions here
+Require the gem, if needed 
+
+`require storyteller`
+
+### Start
+
+Extend the class 
+
+`class MyUseCase < Storyteller::Story`
+
+Define its parameters, Storyteller uses SmartInit to do so
+
+    class MyUsecase < Storyteller::Story
+      initialize_with :param1, :param2
+    end
+
+### Steps
+
+A story is solved advancing steps you can define them via symbols or lambdas
+
+    class MyUsecase < Storyteller::Story
+      initialize_with :param1, :param2
+
+      step :first_step
+      step :second_step
+      step -> () { @param1.save }
+
+      def first_step
+      end
+
+      def second_step
+      end
+    end
+
+### Validation
+
+TODO
+
+### Preparation
+
+TODO
 
 ## Development
 

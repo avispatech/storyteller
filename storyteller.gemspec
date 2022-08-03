@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Run user stories based on a simple DSL"
   spec.description = "User stories or Use Cases can be written in a procedural way, like a recipe, to increase the understanding of the problem"
-  spec.homepage = "https://github.com/avispatech/storyteller"
+  spec.homepage = "https://blog.avispa.tech/storyteller/"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
@@ -34,7 +34,9 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_dependency "smart_init"
+  spec.add_dependency "activesupport"
   spec.add_development_dependency "rspec", "~> 3.2"
+  spec.add_development_dependency "bump"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

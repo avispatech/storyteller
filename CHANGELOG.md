@@ -1,4 +1,9 @@
 ## [Unreleased]
+## [0.3.1] - 2022-08-10
+
+- `requisite :callback` replaces `validates_with :callback` as the official
+  way to determine the minimum conditions to start a sotry.
+
 ## [0.3.0] - 2022-08-10
 
 - Adds done criteria, and verification process

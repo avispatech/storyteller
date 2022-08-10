@@ -11,7 +11,7 @@ module Storyteller
     is_callable method_name: :execute
     include ActiveSupport::Callbacks
 
-    define_callbacks :init, :validation, :preparation, :run
+    define_callbacks :init, :validation, :preparation, :run, :verification
 
     set_callback :init, :after do
       @stage = :initialized
@@ -75,6 +75,19 @@ module Storyteller
         end
       else
         set_callback :run, :after, arg
+      end
+    end
+
+    # 
+    def self.done_criteria(arg)
+      if block_given?
+        set_callback :verification, :before do
+          yield
+        end
+      else
+        Array.wrap(arg).each do |callback|
+          set_callback :verification, :before, callback
+        end
       end
     end
 

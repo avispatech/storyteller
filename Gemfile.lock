@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    storyteller (0.4.0)
+    storyteller (0.4.1)
       activesupport
       smart_init
 

@@ -1,4 +1,13 @@
 ## [Unreleased]
+## [0.4.0] - 2022-08-10
+
+- adds tests for prerequisites
+- adds tests for steps
+- adds tests for valid?
+- adds tests for success?
+- modifies requisite with prerequisite
+- modifies prepares_with with requisite
+
 ## [0.3.1] - 2022-08-10
 
 - `requisite :callback` replaces `validates_with :callback` as the official

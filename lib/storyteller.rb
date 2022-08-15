@@ -10,6 +10,7 @@ module Storyteller
     extend SmartInit
     is_callable method_name: :execute
     include ActiveSupport::Callbacks
+    attr_reader :errors
 
     define_callbacks :init, :validation, :preparation, :run, :verification
 
@@ -30,12 +31,18 @@ module Storyteller
 
     #
     # @note One callback at a time
-    def self.validates_with(arg=nil, &block)
+    def self.prerequisite(arg=nil, &block)
       if block_given?
         set_callback :validation, :before, -> () { block.call }
       else
-        set_callback :validation, :before, arg
+        Array.wrap(arg).each do |callback|
+          set_callback :validation, :before, callback
+        end
       end
+    end
+
+    def self.validates_with(arg=nil, &block)
+      prerequisite(arg, block)
     end
 
     set_callback :preparation, :after do 
@@ -44,7 +51,7 @@ module Storyteller
 
     #
     # @note One callback at a time
-    def self.prepares_with(arg=nil)
+    def self.requisite(arg=nil)
       if block_given?
         set_callback :preparation, :before do
           yield
@@ -52,6 +59,10 @@ module Storyteller
       else
         set_callback :preparation, :before, arg
       end
+    end
+
+    def self.prepares_with(arg=nil, &block)
+      self.requisite(arg, block)
     end
 
     #
@@ -92,7 +103,9 @@ module Storyteller
     end
 
     def success?
-      @errors.empty?
+      return true if @stage == :success
+
+      @stage == :executed && @errors.empty?
     end
 
     def valid?
@@ -118,10 +131,12 @@ module Storyteller
       run_callbacks :init unless initialized?
       run_callbacks :preparation unless prepared?
 
-      #internal_validate
       return self unless valid?
   
-      run_callbacks :run 
+      @errors = []
+      run_callbacks :run
+      @stage = :executed
+      run_callbacks :verification if errors.empty?
       return self unless success?
   
       self

@@ -1,4 +1,12 @@
 ## [Unreleased]
+## [0.4.2] - 2022-08-15
+
+Adds rubocop rules
+Runs rubocop against code 
+Requisite is the official way to validate
+Verify is the official way to check for done criteria
+
+
 ## [0.4.0] - 2022-08-10
 
 - adds tests for prerequisites

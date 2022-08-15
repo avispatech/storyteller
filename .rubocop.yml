@@ -1,13 +1,33 @@
+require: 
+  - rubocop-rspec
+
 AllCops:
-  TargetRubyVersion: 2.6
+  NewCops: enable
+  TargetRubyVersion: 3.1.2
+  Exclude:
+    - vendor/bundle/**/*
+    - '**/db/schema.rb'
+    - '**/db/**/*'
+    - 'config/**/*'
+    - 'bin/*'
+    - 'config.ru'
+    - 'Rakefile'
 
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Style/Documentation:
+  Enabled: false
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Style/ClassAndModuleChildren:
+  Enabled: false
 
-Layout/LineLength:
-  Max: 120
+Style/EmptyMethod:
+  Enabled: false
+
+Bundler/OrderedGems:
+  Enabled: false
+  
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+

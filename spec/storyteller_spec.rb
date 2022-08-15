@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 class NonEmptyStepStory < Storyteller::Story
-  step -> () { }
+  step -> {}
 end
 
 RSpec.describe Storyteller do
   it 'has a version number' do
-    expect(Storyteller::VERSION).not_to be nil
+    expect(Storyteller::VERSION).not_to be_nil
   end
 
   describe '#valid?' do
@@ -27,11 +28,10 @@ RSpec.describe Storyteller do
     end
 
     context 'when single validation is added' do
-
       it 'validates using lambdas' do
         class SingleValidationUsingBlockClass < NonEmptyStepStory
           initialize_with :a
-          prerequisite -> () { error(:obj_a, :invalid) unless a.valid? } 
+          requisite -> { error(:obj_a, :invalid) unless a.valid? }
         end
         obj_d = object_double('User', valid?: true)
         expect(SingleValidationUsingBlockClass.new(a: obj_d)).to be_valid
@@ -41,7 +41,7 @@ RSpec.describe Storyteller do
       it 'validates using symbols' do
         class SingleValidationUsingSymbolClass < NonEmptyStepStory
           initialize_with :a
-          prerequisite :check_a
+          requisite :check_a
 
           def check_a
             error(:obj_a, :invalid) unless a.valid?
@@ -57,8 +57,8 @@ RSpec.describe Storyteller do
       it 'validates using lambdas' do
         class MultipleValidationUsingBlockClass < NonEmptyStepStory
           initialize_with :a, :b
-          prerequisite -> () { error(:obj_a, :invalid) unless a.valid? }
-          prerequisite -> () { error(:obj_b, :invalid) unless b.valid? }
+          requisite -> { error(:obj_a, :invalid) unless a.valid? }
+          requisite -> { error(:obj_b, :invalid) unless b.valid? }
         end
 
         a = object_double('User', valid?: true)
@@ -71,11 +71,11 @@ RSpec.describe Storyteller do
       it 'validates using symbols' do
         class MultipleValidationUsingSymbolClass < NonEmptyStepStory
           initialize_with :a, :b
-          prerequisite :check_a
+          requisite :check_a
           def check_a
             error(:obj_a, :invalid) unless a.valid?
           end
-          prerequisite :check_b
+          requisite :check_b
           def check_b
             error(:obj_b, :invalid) unless b.valid?
           end
@@ -94,36 +94,35 @@ RSpec.describe Storyteller do
         it do
           class SingleInvalidCriteriaClass < NonEmptyStepStory
             initialize_with :a
-            prerequisite :check_a
+            requisite :check_a
 
             def check_a
               error(:obj_a, :invalid) unless a.valid?
             end
           end
           obj_d = object_double('User', valid?: false)
-          expect(SingleInvalidCriteriaClass.new(a: obj_d)).to_not be_valid
+          expect(SingleInvalidCriteriaClass.new(a: obj_d)).not_to be_valid
         end
       end
-    
 
       context 'when some criteria is invalid' do
         it do
           class PartiallyInvalidCriteriaClass < NonEmptyStepStory
             initialize_with :a, :b
-            prerequisite :check_a
-            prerequisite :check_b
+            requisite :check_a
+            requisite :check_b
 
             def check_a
               error(:obj_a, :invalid) unless a.valid?
             end
-            
+
             def check_b
               error(:obj_b, :invalid) unless b.valid?
             end
           end
           obj_a = object_double('User', valid?: false)
           obj_b = object_double('User', valid?: true)
-          expect(SingleInvalidCriteriaClass.new(a: obj_a, b: obj_b)).to_not be_valid
+          expect(SingleInvalidCriteriaClass.new(a: obj_a, b: obj_b)).not_to be_valid
         end
       end
 
@@ -131,20 +130,20 @@ RSpec.describe Storyteller do
         it do
           class AllInvalidCriteriaClass < NonEmptyStepStory
             initialize_with :a, :b
-            prerequisite :check_a
-            prerequisite :check_b
+            requisite :check_a
+            requisite :check_b
 
             def check_a
               error(:obj_a, :invalid) unless a.valid?
             end
-            
+
             def check_b
               error(:obj_b, :invalid) unless b.valid?
             end
           end
           obj_a = object_double('User', valid?: false)
           obj_b = object_double('User', valid?: false)
-          expect(SingleInvalidCriteriaClass.new(a: obj_a, b: obj_b)).to_not be_valid
+          expect(SingleInvalidCriteriaClass.new(a: obj_a, b: obj_b)).not_to be_valid
         end
       end
     end
@@ -175,7 +174,7 @@ RSpec.describe Storyteller do
           step :second_step
 
           def first_step = spy1.call
-          
+
           def second_step = spy2.call
         end
         spy1 = spy('thing')
@@ -209,12 +208,12 @@ RSpec.describe Storyteller do
       end
 
       context 'when there is done criteria' do
-        let(:klass) do 
+        let(:klass) do
           class NonEmptyStepWithCriteriaStory < Storyteller::Story
             initialize_with :spy
-            step -> () {}
+            step -> {}
 
-            done_criteria :check_spy
+            verify :check_spy
 
             def check_spy
               error(:spy, :invalid) unless spy.valid?
@@ -222,17 +221,18 @@ RSpec.describe Storyteller do
           end
           NonEmptyStepWithCriteriaStory
         end
+
         context 'when criteria is valid' do
           it do
             spy = object_double('Spy', valid?: true)
             expect(klass.execute(spy:)).to be_success
           end
         end
-        
+
         context 'when criteria is invalid' do
           it do
             spy = object_double('Spy', valid?: false)
-            expect(klass.execute(spy:)).to_not be_success
+            expect(klass.execute(spy:)).not_to be_success
           end
         end
       end
@@ -241,29 +241,28 @@ RSpec.describe Storyteller do
     context 'when there is an error on any step' do
       it do
         class FailedStepStory < Storyteller::Story
-          step -> () { error(:step, :failure) }
+          step -> { error(:step, :failure) }
         end
 
-        expect(FailedStepStory.execute).to_not be_success
+        expect(FailedStepStory.execute).not_to be_success
       end
 
       context 'when there is done criteria' do
         it 'doesnt call the done criterias' do
           class FailedStepWithDoneCriteriaStory < Storyteller::Story
             initialize_with :spy
-            step -> () { error(:step, :failure) }
+            step -> { error(:step, :failure) }
 
-            done_criteria :check
+            verify :check
 
             def check = spy.call
           end
 
           spy = spy('Thing')
-          expect(FailedStepWithDoneCriteriaStory.execute(spy:)).to_not be_success
-          expect(spy).to_not have_received(:call)
+          expect(FailedStepWithDoneCriteriaStory.execute(spy:)).not_to be_success
+          expect(spy).not_to have_received(:call)
         end
       end
     end
-
   end
 end

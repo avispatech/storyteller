@@ -127,7 +127,7 @@ module Storyteller
 
     def initialized? = @stage != :initializing
 
-    def prepared? = @stage != :initializing && @stage != :prepared
+    def prepared? = %i[initializing initialized prepared].exclude? @stage
 
     def execute
       @stage ||= :initializing

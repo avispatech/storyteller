@@ -65,6 +65,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   bump
@@ -76,4 +77,4 @@ DEPENDENCIES
   storyteller!
 
 BUNDLED WITH
-   2.3.16
+  2.3.16

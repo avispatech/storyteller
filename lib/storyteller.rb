@@ -9,23 +9,19 @@ module Storyteller
 
   class Story
     extend SmartInit
-    is_callable method_name: :execute
     include ActiveSupport::Callbacks
+    is_callable method_name: :execute
     attr_reader :errors
 
     define_callbacks :init, :validation, :preparation, :run, :verification
 
     set_callback :init, :after do
-      @stage = :initialized
+       @stage = :initialized
     end
     #
     # @note One callback at a time
     def self.after_init(arg = nil, &)
-      if block_given?
-        set_callback(:init, :after, &)
-      else
-        set_callback :init, :after, arg
-      end
+      set_callback(:init, :after, block_given? ? & : arg)
     end
 
     #
@@ -40,9 +36,7 @@ module Storyteller
       end
     end
 
-    def self.validates_with(arg = nil, &block)
-      requisite(arg, block)
-    end
+    def self.validates_with(arg = nil, &block) = requisite(arg, block)
 
     set_callback :preparation, :after do
       @stage = :prepared
@@ -58,9 +52,7 @@ module Storyteller
       end
     end
 
-    def self.prepares_with(arg = nil, &block)
-      prepare(arg, block)
-    end
+    alias_method :prepares_with, :prepare
 
     #
     # @note One callback at a time

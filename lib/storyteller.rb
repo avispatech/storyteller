@@ -15,13 +15,13 @@ module Storyteller
 
     define_callbacks :init, :validation, :preparation, :run, :verification
 
-    set_callback :init, :after do
-       @stage = :initialized
-    end
+    set_callback(:init, :after) { @stage = :initialized }
     #
     # @note One callback at a time
     def self.after_init(arg = nil, &)
-      set_callback(:init, :after, block_given? ? & : arg)
+      return set_callback(:init, :after, &) if block_given?
+
+      set_callback :init, :after, arg
     end
 
     #
@@ -38,9 +38,7 @@ module Storyteller
 
     def self.validates_with(arg = nil, &block) = requisite(arg, block)
 
-    set_callback :preparation, :after do
-      @stage = :prepared
-    end
+    set_callback(:preparation, :after) { @stage = :prepared }
 
     #
     # @note One callback at a time
@@ -52,8 +50,9 @@ module Storyteller
       end
     end
 
-    alias_method :prepares_with, :prepare
-
+    class << self
+      alias prepares_with prepare
+    end
     #
     # @note One callback at a time
     def self.step(arg = nil, &)
@@ -79,26 +78,20 @@ module Storyteller
     #
     # @note One callback at a time
     def self.after_run(arg, &)
-      if block_given?
-        set_callback(:run, :after, &)
-      else
-        set_callback :run, :after, arg
-      end
+      return set_callback(:run, :after, &) if block_given?
+
+      set_callback :run, :after, arg
     end
 
     def self.verify(arg, &)
-      if block_given?
-        set_callback(:verification, :before, &)
-      else
-        Array.wrap(arg).each do |callback|
-          set_callback :verification, :before, callback
-        end
+      return set_callback(:verification, :before, &) if block_given?
+
+      Array.wrap(arg).each do |callback|
+        set_callback :verification, :before, callback
       end
     end
 
-    def self.done_criteria(arg = nil, &block)
-      verify(arg, block)
-    end
+    def self.done_criteria(arg = nil, &block) = verify(arg, block)
 
     def success?
       return true if @stage == :success

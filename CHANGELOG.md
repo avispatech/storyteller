@@ -1,4 +1,8 @@
-## [Unreleased]
+## [0.4.3] - 2023-02-07
+
+Modifies prepares_with to be an alias of prepare
+Condenses code
+Cleaning by rubocop on `spec/` and `lib/`
 ## [0.4.2] - 2022-08-15
 
 Adds rubocop rules

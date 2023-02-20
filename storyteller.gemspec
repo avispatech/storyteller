@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'smart_init'
   spec.add_development_dependency 'bump'
+  spec.add_development_dependency 'debug'
   spec.add_development_dependency 'rspec', '~> 3.2'
   spec.add_development_dependency 'rubocop', '~> 1.21'
   spec.add_development_dependency 'rubocop-rake'

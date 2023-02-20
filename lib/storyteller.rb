@@ -11,7 +11,8 @@ module Storyteller
     extend SmartInit
     include ActiveSupport::Callbacks
     is_callable method_name: :execute
-    attr_reader :errors
+    attr_reader :errors, :result
+    private attr_writer :result
 
     define_callbacks :init, :validation, :preparation, :run, :verification
 
@@ -59,7 +60,7 @@ module Storyteller
       if block_given?
         set_callback(:run, :before, &)
       else
-        set_callback :run, :before, arg
+        set_callback(:run, :before, arg)
       end
     end
 

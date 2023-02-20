@@ -265,4 +265,28 @@ RSpec.describe Storyteller do
       end
     end
   end
+
+  describe '#result' do
+    context 'when a step writes into result' do
+      let(:klass) do
+        class SavingResultInStepStory < Storyteller::Story
+          step :save_value_to_result
+
+
+          def save_value_to_result
+            puts 'saving value to result'
+            @result = 'some value'
+          end
+        end
+        SavingResultInStepStory
+      end
+
+      it { expect(klass.execute.result).to eql('some value') }
+
+      it 'does not allow to write result from outside' do
+        new_class = klass.new
+        expect { new_class.result = 'something else' }.to raise_error(NoMethodError)
+      end
+    end
+  end
 end

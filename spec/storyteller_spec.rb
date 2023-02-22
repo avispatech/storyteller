@@ -4,6 +4,11 @@ class NonEmptyStepStory < Storyteller::Story
   step -> {}
 end
 
+class SpiableClass
+  def call
+  end
+end
+
 RSpec.describe Storyteller do
   it 'has a version number' do
     expect(Storyteller::VERSION).not_to be_nil
@@ -47,7 +52,7 @@ RSpec.describe Storyteller do
             error(:obj_a, :invalid) unless a.valid?
           end
         end
-        obj_d = object_double('User', valid?: true)
+        obj_d = instance_double('User', valid?: true)
         expect(SingleValidationUsingSymbolClass.new(a: obj_d)).to be_valid
         expect(obj_d).to(have_received(:valid?).at_least(1))
       end
@@ -160,7 +165,7 @@ RSpec.describe Storyteller do
             spy.call
           end
         end
-        spy = spy('thing')
+        spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
         OneStepStory.execute(spy:)
         expect(spy).to have_received(:call)
       end
@@ -177,8 +182,8 @@ RSpec.describe Storyteller do
 
           def second_step = spy2.call
         end
-        spy1 = spy('thing')
-        spy2 = spy('thing')
+        spy1 = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
+        spy2 = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
         MultipleStepStory.execute(spy1:, spy2:)
         expect(spy1).to have_received(:call)
         expect(spy2).to have_received(:call)
@@ -194,7 +199,7 @@ RSpec.describe Storyteller do
 
           def first_step = spy.call
         end
-        spy = spy('thing')
+        spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
         RepeatedStepsStory.execute(spy:)
         expect(spy).to have_received(:call).at_most(1)
       end
@@ -258,7 +263,7 @@ RSpec.describe Storyteller do
             def check = spy.call
           end
 
-          spy = spy('Thing')
+          spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
           expect(FailedStepWithDoneCriteriaStory.execute(spy:)).not_to be_success
           expect(spy).not_to have_received(:call)
         end

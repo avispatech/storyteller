@@ -13,6 +13,9 @@ AllCops:
     - 'config.ru'
     - 'Rakefile'
 
+Metrics/ClassLength:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
@@ -31,3 +34,21 @@ Lint/UnusedMethodArgument:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+# This exclusions are meant for RSpec 
+Lint/ConstantDefinitionInBlock:
+  Enabled: false
+
+RSpec/LeakyConstantDeclaration:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/VerifiedDoubleReference:
+  EnforcedStyle: string
+
+RSpec/NestedGroups:
+  Max: 5

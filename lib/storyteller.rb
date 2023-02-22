@@ -11,8 +11,7 @@ module Storyteller
     extend SmartInit
     is_callable method_name: :execute
     include ActiveSupport::Callbacks
-    attr_reader :errors
-
+    attr_reader :errors, :result
     define_callbacks :init, :validation, :preparation, :run, :verification
 
     set_callback :init, :after do

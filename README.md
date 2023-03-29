@@ -1,6 +1,6 @@
 # Storyteller
 
-version 0.2.0
+version 0.4.2.2
 
 Run user stories based on a simple DSL
 

@@ -1,4 +1,13 @@
 ## [Unreleased]
+
+## [0.4.3] - 2023-03-29
+
+- Adds silent mode, if a story is executed or initialized
+  with `silent_story: true` the `after_run` will not be executed.
+  This is meant to be used for additional, optional tasks, like
+  notifications.
+
+- `after_run` is a different stage than run
 ## [0.4.2] - 2022-08-15
 
 Adds rubocop rules

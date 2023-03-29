@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    storyteller (0.4.2.2)
+    storyteller (0.4.3)
       activesupport
       smart_init
 
@@ -77,4 +77,4 @@ DEPENDENCIES
   storyteller!
 
 BUNDLED WITH
-   2.4.7
+   2.3.17

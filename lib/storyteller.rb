@@ -9,11 +9,17 @@ module Storyteller
 
   class Story
     extend SmartInit
+
+    def self.initialize_with(*params, **harams)
+      new_harams = harams.merge({ silent_story: false })
+      super(*params, **new_harams)
+    end
+
     is_callable method_name: :execute
     include ActiveSupport::Callbacks
     attr_reader :errors, :result
 
-    define_callbacks :init, :validation, :preparation, :run, :verification
+    define_callbacks :init, :validation, :preparation, :run, :after_run, :verification
 
     set_callback :init, :after do
       @stage = :initialized
@@ -88,9 +94,9 @@ module Storyteller
     # @note One callback at a time
     def self.after_run(arg, &)
       if block_given?
-        set_callback(:run, :after, &)
+        set_callback(:after_run, :after, &)
       else
-        set_callback :run, :after, arg
+        set_callback :after_run, :after, arg
       end
     end
 
@@ -129,7 +135,7 @@ module Storyteller
 
     def prepared? = %i[initializing initialized prepared].exclude? @stage
 
-    def execute
+    def execute # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       @stage ||= :initializing
       @result = nil
       @errors = []
@@ -144,6 +150,8 @@ module Storyteller
       @stage = :executed
       run_callbacks :verification if errors.empty?
       return self unless success?
+
+      run_callbacks :after_run unless @silent_story
 
       self
     end

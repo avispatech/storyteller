@@ -1,6 +1,6 @@
 # Storyteller
 
-version 0.4.2.2
+version 0.4.3
 
 Run user stories based on a simple DSL
 
@@ -83,7 +83,10 @@ Every Story **must** have at least on step to be able to execute, if no steps ar
 
 Verification steps can be added to check if the Story has concluded successfully.
 
+### Closure
 
+If some activities are nice to have, but not necessary, i.e. Notifying a newly created
+user, the `after_run`s may come in handy.
 
 ## Lifecycle
 
@@ -97,6 +100,8 @@ Verification steps can be added to check if the Story has concluded successfully
     - `step`
   - verification
     - `done_criteria`
+  - closure
+    - `after_run`
 
 
 ## Helper methods
@@ -133,6 +138,41 @@ If bundler is not being used to manage dependencies, install the gem by executin
 Require the gem, if needed 
 
 `require storyteller`
+
+Create your Stories extending from `Storyteller::Story`
+
+```
+class CreateUser < Storyteller::Story
+    initialize_with  :email, :name
+
+    step -> { @user = User.create(email:, name:) }
+    step -> { @user.add_role :member }
+    after_run :send_emails
+
+    def send_emails
+      Mailer.send_email(email:, template: :welcome)
+    end
+ end
+```
+
+Invoke your story
+
+```
+CreateUser.execute(email: 'user@example.com', name: 'Example User')
+
+# Or the new, and execute way
+
+use_case = CreateUser.new(email: 'user@example.com', name: 'Example User')
+use_case.execute
+```
+
+### Silent mode
+
+To disable the `after_run` method add the `silent_story: true` parameter.
+
+`CreateUser.execute(email:, name:, silent_story: true)`
+
+
 
 ## Development
 

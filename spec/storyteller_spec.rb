@@ -263,10 +263,37 @@ RSpec.describe Storyteller do
             def check = spy.call
           end
 
-          spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles)
+          spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles
           expect(FailedStepWithDoneCriteriaStory.execute(spy:)).not_to be_success
           expect(spy).not_to have_received(:call)
         end
+      end
+    end
+  end
+
+  describe '#after_run' do
+    context 'when there silent_story is active' do
+      it do
+        class SilentStory < Storyteller::Story
+          initialize_with :spy, captcha: false, returns: :blank
+
+          step -> { @a ||= 1 }
+          step -> { @a += 1 }
+          after_run :call_spy
+
+          def call_spy
+            spy.call
+          end
+        end
+
+        spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles
+        expect(SilentStory.execute(spy:, silent_story: true)).to be_success
+        expect(spy).not_to have_received(:call)
+        ss = SilentStory.new(spy:, silent_story: true)
+        ss.execute
+        expect(spy).not_to have_received(:call)
+        expect(SilentStory.execute(spy:)).to be_success
+        expect(spy).to have_received(:call)
       end
     end
   end

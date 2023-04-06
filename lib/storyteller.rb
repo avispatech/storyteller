@@ -3,8 +3,11 @@
 require 'smart_init'
 require 'active_support/all'
 require_relative 'storyteller/version'
+require_relative 'storyteller/logger'
 
 module Storyteller
+  LOGGER = CustomLogger.new
+
   class Error < StandardError; end
 
   class Story
@@ -151,9 +154,16 @@ module Storyteller
       run_callbacks :verification if errors.empty?
       return self unless success?
 
+      log_execution_if_silent_mode
       run_callbacks :after_run unless @silent_story
 
       self
+    end
+
+    def log_execution_if_silent_mode
+      return unless @silent_story
+
+      LOGGER.warn "Story #{self.class.name} has been executed with silent mode"
     end
   end
 end

@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+## [0.4.4] - 2023-04-06
+
+- Adds Logger warning if Storyteller is executed with silent mode
+
 ## [0.4.3] - 2023-03-29
 
 - Adds silent mode, if a story is executed or initialized

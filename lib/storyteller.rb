@@ -50,7 +50,7 @@ module Storyteller
     end
 
     def self.validates_with(arg = nil, &block)
-      requisite(arg, block)
+      requisite(arg, &block)
     end
 
     set_callback :preparation, :after do
@@ -68,7 +68,7 @@ module Storyteller
     end
 
     def self.prepares_with(arg = nil, &block)
-      prepare(arg, block)
+      prepare(arg, &block)
     end
 
     #
@@ -114,7 +114,7 @@ module Storyteller
     end
 
     def self.done_criteria(arg = nil, &block)
-      verify(arg, block)
+      verify(arg, &block)
     end
 
     def success?

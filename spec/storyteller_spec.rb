@@ -297,4 +297,86 @@ RSpec.describe Storyteller do
       end
     end
   end
+
+  describe 'aliases and callbacks' do
+    it 'supports validates_with as an alias of requisite' do
+      class ValidatesWithAliasStory < NonEmptyStepStory
+        initialize_with :spy
+        validates_with :check_spy
+
+        def check_spy
+          error(:spy, :invalid) unless spy.valid?
+        end
+      end
+
+      spy = object_double('Spy', valid?: true)
+      expect(ValidatesWithAliasStory.new(spy:)).to be_valid
+    end
+
+    it 'supports prepares_with as an alias of prepare' do
+      class PreparesWithAliasStory < NonEmptyStepStory
+        initialize_with :spy
+        prepares_with :load_spy
+        requisite :spy_loaded?
+
+        def load_spy
+          @loaded = true
+        end
+
+        def spy_loaded?
+          error(:spy, :missing) unless @loaded
+        end
+      end
+
+      spy = object_double('Spy')
+      expect(PreparesWithAliasStory.execute(spy:)).to be_success
+    end
+
+    it 'supports done_criteria as an alias of verify' do
+      class DoneCriteriaAliasStory < Storyteller::Story
+        initialize_with :spy
+        step -> {}
+        done_criteria :check_spy
+
+        def check_spy
+          error(:spy, :invalid) unless spy.valid?
+        end
+      end
+
+      spy = object_double('Spy', valid?: true)
+      expect(DoneCriteriaAliasStory.execute(spy:)).to be_success
+    end
+
+    it 'runs after_init callbacks once during execution' do
+      class AfterInitStory < Storyteller::Story
+        initialize_with :spy
+        step -> {}
+        after_init :mark_init
+
+        def mark_init
+          spy.call
+        end
+      end
+
+      spy = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles
+      AfterInitStory.execute(spy:)
+      expect(spy).to have_received(:call).at_most(1)
+    end
+
+    it 'supports check with multiple callbacks' do
+      class CheckCallbacksStory < Storyteller::Story
+        initialize_with :spy1, :spy2
+        check [:first_check, :second_check]
+
+        def first_check = spy1.call
+        def second_check = spy2.call
+      end
+
+      spy1 = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles
+      spy2 = spy('Thing') # rubocop:disable RSpec/VerifiedDoubles
+      CheckCallbacksStory.execute(spy1:, spy2:)
+      expect(spy1).to have_received(:call)
+      expect(spy2).to have_received(:call)
+    end
+  end
 end

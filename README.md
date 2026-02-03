@@ -182,6 +182,8 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 You can learn more about the making process by visiting [AvispaTech's development blog on the subject](https://blog.avispa.tech/2022/08/01/storyteller-1.html).
 
+See `docs/DEVELOPERS.md` for a focused developer guide.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/avispatech/storyteller. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/storyteller/blob/main/CODE_OF_CONDUCT.md).

@@ -118,6 +118,14 @@ module Storyteller
       verify(arg, &block)
     end
 
+    def self.story_name(value = nil)
+      value ? @story_name = value : @story_name
+    end
+
+    def self.subject(method_name)
+      define_method(:subject) { send(method_name) }
+    end
+
     def success?
       return true if @stage == :success
 

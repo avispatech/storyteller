@@ -108,12 +108,12 @@ user, the `after_run`s may come in handy.
 
 Other methods are included to help define the story
 
-**name** can be used to give the Story a more user story name 
+**story_name** can be used to give the Story a more user story name
 
 **subject** can be used to define which is the main user of a story, so any other method can refer to that user as subject
-    
+
     class BookClosestToMe < Story
-      name 'As a user I want to make a reservation in a restaurant closest to me'
+      story_name 'As a user I want to make a reservation in a restaurant closest to me'
       subject :creator
 
       def creator = user

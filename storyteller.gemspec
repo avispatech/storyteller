@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                         like a recipe, to increase the understanding of the problem'
   spec.homepage = 'https://blog.avispa.tech/storyteller/'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 3.1.0'
+  spec.required_ruby_version = '>= 3.3.11'
 
   # spec.metadata['allowed_push_host'] = "TODO: Set to your gem server 'https://example.com'"
 

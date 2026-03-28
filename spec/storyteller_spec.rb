@@ -378,5 +378,34 @@ RSpec.describe Storyteller do
       expect(spy1).to have_received(:call)
       expect(spy2).to have_received(:call)
     end
+
+    it "supports story_name" do
+      class NamedStory < Storyteller::Story
+        story_name "As a user I want to do something"
+        step -> {}
+      end
+
+      expect(NamedStory.story_name).to eq("As a user I want to do something")
+    end
+
+    it "returns nil for story_name when not set" do
+      class UnnamedStory < Storyteller::Story
+        step -> {}
+      end
+
+      expect(UnnamedStory.story_name).to be_nil
+    end
+
+    it "supports subject" do
+      class StoryWithSubject < Storyteller::Story
+        initialize_with :user
+        subject :user
+        step -> {}
+      end
+
+      user = double("User") # standard:disable RSpec/VerifiedDoubles
+      story = StoryWithSubject.new(user:)
+      expect(story.subject).to eq(user)
+    end
   end
 end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'smart_init'
-require 'active_support/all'
-require_relative 'storyteller/version'
-require_relative 'storyteller/logger'
+require "smart_init"
+require "active_support/all"
+require_relative "storyteller/version"
+require_relative "storyteller/logger"
 
 module Storyteller
   LOGGER = CustomLogger.new
@@ -14,12 +14,13 @@ module Storyteller
     extend SmartInit
 
     def self.initialize_with(*params, **harams)
-      new_harams = harams.merge({ silent_story: false })
+      new_harams = harams.merge({silent_story: false})
       super(*params, **new_harams)
     end
 
     is_callable method_name: :execute
     include ActiveSupport::Callbacks
+
     attr_reader :errors, :result
 
     define_callbacks :init, :validation, :preparation, :run, :after_run, :verification
@@ -50,7 +51,7 @@ module Storyteller
     end
 
     def self.validates_with(arg = nil, &block)
-      requisite(arg, block)
+      requisite(arg, &block)
     end
 
     set_callback :preparation, :after do
@@ -68,7 +69,7 @@ module Storyteller
     end
 
     def self.prepares_with(arg = nil, &block)
-      prepare(arg, block)
+      prepare(arg, &block)
     end
 
     #
@@ -114,7 +115,7 @@ module Storyteller
     end
 
     def self.done_criteria(arg = nil, &block)
-      verify(arg, block)
+      verify(arg, &block)
     end
 
     def success?
@@ -131,7 +132,7 @@ module Storyteller
     end
 
     def error(element, kind)
-      @errors << { element:, kind: }
+      @errors << {element:, kind:}
     end
 
     def initialized? = @stage != :initializing

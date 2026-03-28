@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -e
+
+RUBIES=("3.3.11" "3.4.7" "4.0.1")
+PASS=()
+FAIL=()
+
+for version in "${RUBIES[@]}"; do
+  echo ""
+  echo "========================================"
+  echo "Ruby $version"
+  echo "========================================"
+
+  if mise exec ruby@$version -- bundle install --quiet 2>&1 && \
+     mise exec ruby@$version -- bundle exec rspec && \
+     mise exec ruby@$version -- bundle exec standardrb; then
+    PASS+=("$version")
+  else
+    FAIL+=("$version")
+  fi
+done
+
+echo ""
+echo "========================================"
+echo "Results"
+echo "========================================"
+for v in "${PASS[@]}"; do echo "  PASS  Ruby $v"; done
+for v in "${FAIL[@]}"; do echo "  FAIL  Ruby $v"; done
+
+[ ${#FAIL[@]} -eq 0 ]
